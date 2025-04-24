@@ -57,7 +57,7 @@
                         
 
                         function toggleDataSolucaoVisibility() {
-                            if (situacaoSelect.value === '3') {
+                            if (situacaoSelect.value === '{{ $idResolvido }}') {
                                 dataSolucaoContainer.style.display = 'flex'; // ou 'flex', 'grid', dependendo do seu layout
                                 dataSolucaoInput.value = '{{ now()->toDateString() }}';
                             } else {

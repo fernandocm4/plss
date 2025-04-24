@@ -17,7 +17,7 @@ class ChamadoController extends Controller
     public function home() {
 
         //
-        $situacao_resolvido = DB::table('situacoes')->where('titulo_situacao', 'resolvido')->value('id');
+        $situacao_resolvido = DB::table('situacoes')->where('titulo_situacao', 'Resolvido')->value('id');
 
 
         $chamados_dentro_prazo = DB::table('chamados')
@@ -113,7 +113,9 @@ class ChamadoController extends Controller
         $chamados = Chamado::with(['categoria', 'situacao'])->findOrFail($id);
         $situacao = DB::table('situacoes')->get();
 
-        return view('chamado', ['chamado'=>$chamados, 'situacoes'=>$situacao]);
+        $idResolvido = Situacao::where('titulo_situacao', 'Resolvido')->value('id');
+
+        return view('chamado', ['chamado'=>$chamados, 'situacoes'=>$situacao, 'idResolvido'=>$idResolvido]);
     }
 
 }
