@@ -32,7 +32,7 @@ tr:nth-child(even) {
             <tr>
                 <td><a class="hover:underline" href="/chamados/{{ $key->id }}">{{ $key->titulo }}</a></td>
                 <td>{{ $key->descricao }}</td>
-                <td>{{ $key->categoria }}</td>
+                <td>{{ $key->categoria->titulo_categoria }}</td>
                 <td>{{ \Carbon\Carbon::parse($key->data_criacao)->format('d/m/Y')}}</td>
                 <td>{{ \Carbon\Carbon::parse($key->prazo_solucao)->format('d/m/Y')}}</td>
                 <!-- VERIFICA SE A DATA DE SOLUÇÃO AINDA NÃO FOI DEFINIDA -->
@@ -43,7 +43,7 @@ tr:nth-child(even) {
                         Não definida
                     @endif
                 </td>
-                <td>{{ $key->situacao }}</td>
+                <td>{{ $key->situacao->titulo_situacao }}</td>
             </tr>
         @endforeach
         

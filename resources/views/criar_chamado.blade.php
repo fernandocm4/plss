@@ -25,12 +25,9 @@
                 
                 <span class="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*'] ...">Categoria</span>
                 <select class="border border-gray-300 rounded-sm p-2" name="categoria" id="categoria">
-                    <option value="">Selecione uma categoria</option>
-                    <option value="sistema">Sistema</option>
-                    <option value="computador">Computador</option>
-                    <option value="perifericos">Periféricos</option>
-                    <option value="internet">Internet</option>
-                    <option value="outro">Outro</option>
+                @foreach ($categorias as $categoria)
+                    <option value="{{ $categoria->id }}">{{ $categoria->titulo_categoria }}</option>
+                @endforeach
                 </select>
             </div>
 
@@ -56,7 +53,7 @@
 
                 <span class="text-gray-700">Situação</span>
                 <select class="mb-4 border border-gray-300 rounded-sm p-2" name="situacao" id="situacao">
-                    <option value="novo">Novo</option>
+                    <option value="1">Novo</option>
                 </select>
 
                 <span class="text-gray-700">Data de criação</span>

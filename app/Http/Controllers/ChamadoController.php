@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Models\Chamado;
+use App\Models\Situacao;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\DB;
 
 class ChamadoController extends Controller
@@ -15,8 +17,11 @@ class ChamadoController extends Controller
     public function home() {
 
         //
+        $situacao_resolvido = DB::table('situacoes')->where('titulo_situacao', 'resolvido')->value('id');
+
+
         $chamados_dentro_prazo = DB::table('chamados')
-            ->where('situacao', 'resolvido')
+            ->where('situacao_id', $situacao_resolvido)
             ->whereNotNull('data_solucao')
             ->whereRaw('data_solucao::date <= prazo_solucao::date')
             ->whereRaw('date_part(\'month\', data_solucao) = ?', [Carbon::now()->month])->count();
@@ -26,7 +31,15 @@ class ChamadoController extends Controller
 
         $todos_chamados = DB::table('chamados')->count();
 
-        $percent_dentro_prazo = ($chamados_dentro_prazo * 100) / $todos_chamados_mes;
+        if ($todos_chamados_mes) {
+            $percent_dentro_prazo = ($chamados_dentro_prazo * 100) / $todos_chamados_mes;
+        } else {
+            $percent_dentro_prazo = 0;
+        }
+
+        //$percent_dentro_prazo = ($chamados_dentro_prazo * 100) / $todos_chamados_mes;
+
+        
 
         return view('home', ['porcentagemPrazo' => $percent_dentro_prazo, 'dentroPrazo'=>$chamados_dentro_prazo, 'chamadosMes'=>$todos_chamados_mes, 'todos'=>$todos_chamados]);
 
@@ -40,9 +53,12 @@ class ChamadoController extends Controller
 
         $dataSalva = $dataAtual.''.$horaAtual;
 
+        $categorias = DB::table('categorias')->get();
+
         return view('criar_chamado', [
             'dataCriacao' => $dataAtual,
             'dataPrazo' => $prazoSolucao,
+            'categorias' => $categorias
         ]);
     }
 
@@ -53,9 +69,9 @@ class ChamadoController extends Controller
 
         $chamado->titulo = $request->titulo;
         $chamado->descricao = $request->descricao;
-        $chamado->categoria = $request->categoria;
+        $chamado->categoria_id = $request->categoria;
 
-        $chamado->situacao = $request->situacao;
+        $chamado->situacao_id = $request->situacao;
         $chamado->prazo_solucao = $request->prazoSolucao;
         $chamado->data_criacao = $dataAtual;
         $chamado->data_solucao = $request->dataSolucao;
@@ -74,8 +90,11 @@ class ChamadoController extends Controller
 
     public function update(Request $request, $id) {
         $chamado = Chamado::findOrFail($id);
+        //$chamados = Chamado::with(['categoria', 'situacao'])->findOrFail($id);
 
-        $chamado->situacao = $request->situacao;
+        
+
+        $chamado->situacao_id = $request->situacao;
         $chamado->data_solucao = $request->dataSolucao;
 
         $chamado->save();
@@ -83,15 +102,18 @@ class ChamadoController extends Controller
     }
 
     public function listar() {
-        $chamados = Chamado::all();
+        //$chamados = Chamado::all();
 
+        $chamados = Chamado::with(['categoria', 'situacao'])->get();
         return view('chamados', ['chamado'=>$chamados]);
     }
 
     public function listar_chamado($id) {
-        $chamado = Chamado::findOrFail($id);
+        //$chamado = Chamado::findOrFail($id);
+        $chamados = Chamado::with(['categoria', 'situacao'])->findOrFail($id);
+        $situacao = DB::table('situacoes')->get();
 
-        return view('chamado', ['chamado'=>$chamado]);
+        return view('chamado', ['chamado'=>$chamados, 'situacoes'=>$situacao]);
     }
 
 }

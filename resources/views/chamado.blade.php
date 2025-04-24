@@ -23,7 +23,7 @@
             
             <span class="text-gray-700">Categoria</span>
             <select class="border border-gray-300 rounded-sm p-2" name="categoria" id="categoria">
-                <option value="categoria">{{$chamado->categoria}}</option>
+                <option value="categoria">{{$chamado->categoria->titulo_categoria}}</option>
             </select>
         </div>
         <form action="{{ route('chamados.update', ['id' => $chamado->id]) }}" method="POST" class="bg-white flex flex-col p-8 w-1/2">
@@ -33,9 +33,12 @@
                         
                     <span class="text-gray-700">Situação</span>
                     <select class="mb-4 border border-gray-300 rounded-sm p-2" name="situacao" id="situacao">
-                        <option value="novo" {{ $chamado->situacao == 'novo' ? 'selected' : '' }}>Novo</option>
+                        <!--<option value="novo" {{ $chamado->situacao == 'novo' ? 'selected' : '' }}>Novo</option>
                         <option value="pendente" {{ $chamado->situacao == 'pendente' ? 'selected' : '' }}>Pendente</option>
-                        <option value="resolvido" {{ $chamado->situacao == 'resolvido' ? 'selected' : '' }}>Resolvido</option>
+                        <option value="resolvido" {{ $chamado->situacao == 'resolvido' ? 'selected' : '' }}>Resolvido</option>-->
+                        @foreach ($situacoes as $situacao)
+                            <option value="{{ $situacao->id }}">{{ $situacao->titulo_situacao }}</option>
+                        @endforeach
                     </select>
 
                     <div id="dataSolucaoContainer" class="flex-col">
@@ -51,9 +54,10 @@
                         const situacaoSelect = document.getElementById('situacao');
                         const dataSolucaoContainer = document.getElementById('dataSolucaoContainer');
                         const dataSolucaoInput = document.getElementById('dataSolucao');
+                        
 
                         function toggleDataSolucaoVisibility() {
-                            if (situacaoSelect.value === 'resolvido') {
+                            if (situacaoSelect.value === '3') {
                                 dataSolucaoContainer.style.display = 'flex'; // ou 'flex', 'grid', dependendo do seu layout
                                 dataSolucaoInput.value = '{{ now()->toDateString() }}';
                             } else {
