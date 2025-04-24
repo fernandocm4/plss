@@ -11,12 +11,12 @@
 
 <body class="bg-slate-100">
     <div class="flex flex-row h-full w-full">
-        <div class="bg-red-500 flex flex-col w-1/6">
-            <h1 class="text-center">LOGO</h1>
+        <div class="bg-red-500 rounded-r-lg shadow-xl/30 flex flex-col w-1/6">
+            <h1 class="text-center">PLSS</h1>
             <ul>
-                <li class="hover:bg-red-800 hover:cursor-pointer"><a class="text-white" href="/">Início</a></li>
-                <li class="hover:bg-red-800 hover:cursor-pointer"><a class="text-white" href="/chamados">Chamados e ajuda</a></li>
-                <li class="hover:bg-red-800 hover:cursor-pointer"><a class="text-white" href="/novo-chamado">Abrir um novo chamado</a></li>
+                <li class="hover:bg-red-800 hover:cursor-pointer h-1/2  {{ request()->routeIs('home') ? 'bg-red-900':'' }} "><a class="ml-4 text-white h-full w-full flex items-center" href="{{ route('home') }}">Início</a></li>
+                <li class="hover:bg-red-800 hover:cursor-pointer h-1/2  {{ request()->routeIs('chamados*') ? 'bg-red-900':'' }}"><a class="ml-4 text-white h-full w-full flex items-center" href="{{ route('chamados') }}">Chamados e ajuda</a></li>
+                <li class="hover:bg-red-800 hover:cursor-pointer h-1/2  {{ request()->routeIs('novo-chamado') ? 'bg-red-900':'' }}"><a class="ml-4 text-white h-full w-full flex items-center" href="{{ route('novo-chamado') }}">Abrir um novo chamado</a></li>
             </ul>
         </div>
         <main class="w-full">
