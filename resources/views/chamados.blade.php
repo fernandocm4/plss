@@ -18,7 +18,6 @@ tr:nth-child(even) {
 }
 </style>
 <div>
-    <h1>CHAMADOS PAGE</h1>
     <table>
         <tr>
             <th>Título</th>

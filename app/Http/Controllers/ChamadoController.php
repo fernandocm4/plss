@@ -16,6 +16,7 @@ class ChamadoController extends Controller
 
         //
         $chamados_dentro_prazo = DB::table('chamados')
+            ->where('situacao', 'resolvido')
             ->whereNotNull('data_solucao')
             ->whereRaw('data_solucao::date <= prazo_solucao::date')
             ->whereRaw('date_part(\'month\', data_solucao) = ?', [Carbon::now()->month])->count();
@@ -62,6 +63,13 @@ class ChamadoController extends Controller
         $chamado->save();
 
         return redirect('/chamados');
+    }
+
+    public function delete($id) {
+        $chamado = Chamado::findOrFail($id);
+        $chamado->delete();
+
+        return redirect()->route('chamados');
     }
 
     public function update(Request $request, $id) {

@@ -3,7 +3,7 @@
 <div class="flex flex-col h-full w-full p-8">
     <h1>ABRIR UM NOVO CHAMADO</h1>
     <p class="pb-4">Campos marcados com * são obrigatórios e devem ser preenchidos.</p>
-    <form action="/novo-chamado" method="POST" class="bg-white flex flex-col p-8">
+    <form id="form" action="/novo-chamado" method="POST" class="bg-white flex flex-col p-8">
         @csrf
         <div class="flex flex-row">
             <div class="flex flex-col w-1/2">
@@ -25,12 +25,29 @@
                 
                 <span class="text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*'] ...">Categoria</span>
                 <select class="border border-gray-300 rounded-sm p-2" name="categoria" id="categoria">
-                    <option value="item1">Item 1</option>
-                    <option value="item2">Item 2</option>
-                    <option value="item3">Item 3</option>
-                    <option value="item3">Item 4</option>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="sistema">Sistema</option>
+                    <option value="computador">Computador</option>
+                    <option value="perifericos">Periféricos</option>
+                    <option value="internet">Internet</option>
+                    <option value="outro">Outro</option>
                 </select>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.getElementById('form');
+                    const categoriaSelect = document.getElementById('categoria');
+
+                    form.addEventListener('submit', function(event) {
+                        if (categoriaSelect.value === '') {
+                            event.preventDefault();
+                            alert('Por favor, selecione uma categoria para o chamado.');
+                            categoriaSelect.focus();
+                        }
+                    });
+                });
+            </script>
 
             <div class="flex flex-col w-1/2">
                 
