@@ -14,9 +14,10 @@ class ChamadoController extends Controller
 
     public function home() {
 
-        $chamados = DB::table('chamados')
+        //
+        $chamados_dentro_prazo = DB::table('chamados')
             ->whereNotNull('data_solucao')
-            ->whereRaw('data_solucao::date > prazo_solucao::date')
+            ->whereRaw('data_solucao::date <= prazo_solucao::date')
             ->whereRaw('date_part(\'month\', data_solucao) = ?', [Carbon::now()->month])->count();
 
         $todos_chamados_mes = DB::table('chamados')
@@ -24,16 +25,19 @@ class ChamadoController extends Controller
 
         $todos_chamados = DB::table('chamados')->count();
 
-        $chamados_atrasados = ($chamados * 100) / $todos_chamados_mes;
+        $percent_dentro_prazo = ($chamados_dentro_prazo * 100) / $todos_chamados_mes;
 
-        return view('home', ['chamado' => $chamados_atrasados, 'todosmes'=>$todos_chamados_mes, 'chamados'=>$chamados, 'todos'=>$todos_chamados]);
+        return view('home', ['porcentagemPrazo' => $percent_dentro_prazo, 'dentroPrazo'=>$chamados_dentro_prazo, 'chamadosMes'=>$todos_chamados_mes, 'todos'=>$todos_chamados]);
 
     }
 
     public function index()
     {
         $dataAtual = Carbon::now()->format('Y-m-d');
+        $horaAtual = Carbon::now()->format('H:i:s');
         $prazoSolucao = Carbon::now()->addDays(3)->format('Y-m-d');
+
+        $dataSalva = $dataAtual.''.$horaAtual;
 
         return view('criar_chamado', [
             'dataCriacao' => $dataAtual,
@@ -44,15 +48,7 @@ class ChamadoController extends Controller
     public function criar(Request $request) {
         $chamado = new Chamado;
 
-        /* 
-            $table->string('descricao');
-            $table->string('categoria');
-
-            $table->string('situacao');
-            $table->datetime('prazo_solucao');
-            $table->datetime('data_criacao');
-            $table->datetime('data_solucao')->nullable();
-        */
+        $dataAtual = Carbon::now()->format('Y-m-d H:i:s');
 
         $chamado->titulo = $request->titulo;
         $chamado->descricao = $request->descricao;
@@ -60,12 +56,22 @@ class ChamadoController extends Controller
 
         $chamado->situacao = $request->situacao;
         $chamado->prazo_solucao = $request->prazoSolucao;
-        $chamado->data_criacao = $request->dataCriacao;
+        $chamado->data_criacao = $dataAtual;
         $chamado->data_solucao = $request->dataSolucao;
 
         $chamado->save();
 
         return redirect('/chamados');
+    }
+
+    public function update(Request $request, $id) {
+        $chamado = Chamado::findOrFail($id);
+
+        $chamado->situacao = $request->situacao;
+        $chamado->data_solucao = $request->dataSolucao;
+
+        $chamado->save();
+        return redirect()->route('chamados');
     }
 
     public function listar() {

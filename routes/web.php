@@ -18,5 +18,7 @@ Route::get('/chamados', [ChamadoController::class, 'listar'])->name('chamados');
     return view('criar_chamado');
 });*/
 Route::get('chamados/{id}', [ChamadoController::class, 'listar_chamado'])->name('chamados.id');
+Route::put('chamados/{id}', [ChamadoController::class, 'update'])->name('chamados.update');
+
 Route::get('/novo-chamado', [ChamadoController::class, 'index'])->name('novo-chamado');
 Route::post('/novo-chamado', [ChamadoController::class, 'criar'])->name('novo-chamado');
