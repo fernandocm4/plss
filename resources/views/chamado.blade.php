@@ -40,7 +40,7 @@
 
                     <div id="dataSolucaoContainer" class="flex-col">
                         <span class="text-gray-700">Data de solução</span>
-                        <input class="border border-gray-300 rounded-sm p-2" type="date" value="{{ now()->toDateString() }}" name="dataSolucao" id="dataSolucao" readonly>
+                        <input class="border border-gray-300 rounded-sm p-2" type="date"  name="dataSolucao" id="dataSolucao" readonly>
                     </div>
 
                     
@@ -50,13 +50,15 @@
                     document.addEventListener('DOMContentLoaded', function() {
                         const situacaoSelect = document.getElementById('situacao');
                         const dataSolucaoContainer = document.getElementById('dataSolucaoContainer');
+                        const dataSolucaoInput = document.getElementById('dataSolucao');
 
                         function toggleDataSolucaoVisibility() {
                             if (situacaoSelect.value === 'resolvido') {
                                 dataSolucaoContainer.style.display = 'flex'; // ou 'flex', 'grid', dependendo do seu layout
+                                dataSolucaoInput.value = '{{ now()->toDateString() }}';
                             } else {
                                 dataSolucaoContainer.style.display = 'none';
-                                const dataSolucaoInput = document.getElementById('dataSolucao');
+                                dataSolucaoInput.value = null;
                             }
                         }
                         toggleDataSolucaoVisibility();
